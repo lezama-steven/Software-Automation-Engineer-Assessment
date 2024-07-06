@@ -26,15 +26,34 @@ class KanbanPage {
 
   async waitForColumnsToBeFour() {
     const columns = await this.getCountBoardsColumns();
+
     if (columns < 4) {
-      await this.page.reload();
-      await this.page.waitForTimeout(this.TIME_TO_AWAIT);
-      return this.waitForColumnsToBeFour();
+      return this.checkBoard();
     }
   }
 
+  async countLastColumnCards() {
+    const cardsArticlesSelector = kanbanSelectors.lastColumnCardsArticles;
+
+    return this.page.evaluate((selector) => {
+      const cardsArticles = document.querySelectorAll(selector);
+      return cardsArticles.length;
+    }, cardsArticlesSelector);
+  }
+
   async checkBoard() {
-    return this.waitForColumnsToBeFour();
+    await this.page.reload();
+    await this.page.waitForTimeout(this.TIME_TO_AWAIT);
+    await this.waitForColumnsToBeFour();
+    const columnsInfo = await this.getColumnsInfo();
+    if (columnsInfo.lastColumnInfo.totalTasks <= 0) {
+      return this.checkBoard();
+    }
+
+    const totalIncompleteCards = await this.getIncompleteCard();
+    if (totalIncompleteCards <= 0) {
+      return this.checkBoard();
+    }
   }
 
   async getIncompleteCard() {
@@ -64,9 +83,6 @@ class KanbanPage {
 
   async selectIncompleteCard() {
     const cardTaskIncompletedIndex = await this.getIncompleteCard();
-    if (!cardTaskIncompletedIndex) {
-      return this.executeTest1();
-    }
     return this.clickOnCardWithTaskIncompleted(cardTaskIncompletedIndex);
   }
 

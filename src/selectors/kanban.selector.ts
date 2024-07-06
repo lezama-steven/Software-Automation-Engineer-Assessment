@@ -1,7 +1,7 @@
 import { Locator } from "@playwright/test";
 
 export const kanbanSelectors = {
-  board: 'div.flex section',
+  board: 'div.flex > div > section',
   boardColumnsContainer: '//div[@class="flex"]',
   firstColumn: '//div[@class="flex"]/div/section[1]',
   firstColumnTitle: '//div[@class="flex"]/div/section[1]/div/h2',
