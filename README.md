@@ -24,4 +24,8 @@ This coding quiz consists of a Playwright automation script task.
 - Provide a descriptive title and any additional comments if necessary.
 - Submit the pull request.
 
+6. Steps to execute
+- npm install
+- npx playwright test kanban --repeat-each 5
+
 Remember to adhere to the time limit of 48 hours and ensure that all requested files are included in your pull request. Good luck!
